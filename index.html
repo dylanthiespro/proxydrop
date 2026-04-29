@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ProxyDrop Map</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map { height: 100vh; }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+const SUPABASE_URL = "https://ykoriteyapnsljkhijtl.supabase.co/rest/v1";
+const SUPABASE_KEY = "sb_publishable_AyLyVRhY33pADSDyaQQmLA_Ok40lcIt";
+
+const map = L.map('map').setView([50.5, 4.5], 7);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+}).addTo(map);
+
+// Charger les données
+fetch(SUPABASE_URL + "/rest/v1/proxy_droppers", {
+  headers: {
+    apikey: SUPABASE_KEY,
+    Authorization: "Bearer " + SUPABASE_KEY
+  }
+})
+.then(res => res.json())
+.then(data => {
+  data.forEach(item => {
+    if(item.latitude && item.longitude){
+      L.marker([item.latitude, item.longitude])
+        .addTo(map)
+        .bindPopup(item.first_name || "Proxy");
+    }
+  });
+});
+</script>
+
+</body>
+</html>
