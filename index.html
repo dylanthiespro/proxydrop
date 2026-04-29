@@ -12,6 +12,13 @@
 </head>
 <body>
 
+<div style="position:absolute;top:10px;left:10px;background:white;padding:10px;z-index:1000;">
+  <input id="name" placeholder="Nom"><br>
+  <input id="lat" placeholder="Latitude"><br>
+  <input id="lng" placeholder="Longitude"><br>
+  <button onclick="addPoint()">Ajouter</button>
+</div>
+
 <div id="map"></div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -43,6 +50,29 @@ fetch(SUPABASE_URL + "/rest/v1/proxy_droppers", {
     }
   });
 });
+function addPoint(){
+  const name = document.getElementById("name").value;
+  const lat = parseFloat(document.getElementById("lat").value);
+  const lng = parseFloat(document.getElementById("lng").value);
+
+  fetch(SUPABASE_URL + "/rest/v1/proxy_droppers", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: SUPABASE_KEY,
+      Authorization: "Bearer " + SUPABASE_KEY
+    },
+    body: JSON.stringify({
+      first_name: name,
+      latitude: lat,
+      longitude: lng
+    })
+  })
+  .then(() => {
+    alert("Ajouté !");
+    location.reload();
+  });
+}
 </script>
 
 </body>
