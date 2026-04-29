@@ -46,7 +46,10 @@ fetch(SUPABASE_URL + "/rest/v1/proxy_droppers", {
     if(item.latitude && item.longitude){
       L.marker([item.latitude, item.longitude])
         .addTo(map)
-        .bindPopup(item.first_name || "Proxy");
+        .bindPopup(`
+  <b>${item.first_name || ""} ${item.last_name || ""}</b><br>
+  📞 ${item.phone || ""}
+`);
     }
   });
 });
